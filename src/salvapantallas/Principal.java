@@ -12,17 +12,19 @@ package salvapantallas;
 import figuras.*;
 import java.util.*;
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 public class Principal extends javax.swing.JFrame {
 
     List<Dibujable> objetos;
-    
-    
+    BufferedImage buff;
+        
     /**
      * Creates new form Principal
      */
     public Principal() {
         initComponents();
+        buff = new BufferedImage(jPanel1.getWidth(), jPanel1.getHeight(), BufferedImage.TYPE_INT_RGB);
     }
 
     /**
@@ -100,38 +102,52 @@ public class Principal extends javax.swing.JFrame {
         int radio = r.nextInt(25);
         Color color = new java.awt.Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
         Color colorFondo = new java.awt.Color(r.nextInt(255), r.nextInt(255), r.nextInt(255));
-        
+
         CirculoMovil c = new CirculoMovil(x, y, radio, incrX, incrY);
         c.setColor(color);
         c.setColorRelleno(colorFondo);
         c.setGrosor(2);
         objetos.add(c);
     }
-    
+
     private void jSpinner1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSpinner1StateChanged
-        annadir();
+        int n = (Integer) jSpinner1.getValue();
+        int size = objetos.size();
+        if (n > size) {
+            for (int i = objetos.size(); i < n; i++) {
+                annadir();
+            }
+        } else if (n < size) {
+            for (int i = n; i < size; i++) {
+                objetos.remove(0);
+            }
+        }
+
+
     }//GEN-LAST:event_jSpinner1StateChanged
 
-    
+
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         objetos = new ArrayList<>();
         new javax.swing.Timer(40, new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent ev) {
                 dibujarFotograma();
             }
-        }).start();  
+        }).start();
     }//GEN-LAST:event_formWindowOpened
 
     private void dibujarFotograma() {
-        java.awt.Graphics g = jPanel1.getGraphics();
+        java.awt.Graphics gpanel = jPanel1.getGraphics();
+        java.awt.Graphics g = buff.getGraphics();
         g.setColor(Color.WHITE);
         g.fillRect(0, 0, 400, 300);
         for (Dibujable d : objetos) {
             d.dibujar(g);
-            ((CirculoMovil)d).mover();
+            ((CirculoMovil) d).mover();
         }
+        gpanel.drawImage(buff, 0, 0, null);
     }
-    
+
     /**
      * @param args the command line arguments
      */

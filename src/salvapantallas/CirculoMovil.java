@@ -21,8 +21,17 @@ public class CirculoMovil extends Ovalo {
     }
     
     public void mover() {
-        setX((getX() + incrX + 400) % 400);
-        setY((getY() + incrY + 300) % 300);
+        setX(getX() + incrX);
+        setY(getY() + incrY);
+        int x = getX();
+        int y = getY();
+        if (x <= 0 || x >= 400) {
+            incrX = -incrX;
+        }
+        if (y <= 0 || y >= 300) {
+            incrY = -incrY;
+        }
+        
     }
     
 
